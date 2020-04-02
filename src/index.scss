@@ -1,0 +1,99 @@
+$spacing-large: 32px;
+$spacing-medium: 24px;
+$spacing-small: 12px;
+$spacing-xsmall: 6px;
+
+/* Border Radiuses */
+$border-radius-medium: 6px;
+
+/* Font sizes */
+$font-size-xlarge: 1.5em;
+$font-size-large: 1.25em;
+$font-size-medium: 1em;
+$font-size-small: 0.81em;
+$font-size-xsmall: 0.75em;
+
+/* Colors */
+$color-black: #00112c;
+$color-gray-darker: #687282;
+$color-gray-dark: #b9c4c9;
+$color-gray: #d4d9db;
+$color-gray-light: #e6e9eb;
+$color-gray-lighter: #f7f8f9;
+$color-white: #fff;
+
+/* Breakpoints for responsive design */
+$mobile: 320px;
+$tablet: 768px;
+$desktop: 1024px;
+
+@mixin mobile {
+  @media (min-width: $mobile) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $tablet) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $desktop) {
+    @content;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $color-white;
+  color: $color-black;
+  font-size: $font-size-medium;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+}
+
+h1, h2 {
+  font-size: $font-size-large;
+  line-height: 1.5em;
+}
+
+h3 {
+  color: $color-gray-darker;
+  font-size: $font-size-xsmall;
+  letter-spacing: 1.2px;
+  margin: 0 0 $spacing-small;
+  text-transform: uppercase;
+}
+
+p {
+  font-size: $font-size-small;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
