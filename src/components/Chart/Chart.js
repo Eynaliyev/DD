@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import Chart from "react-apexcharts";
 import ApexCharts from "apexcharts";
 import options from "./utils/options";
-const data = [];
-
 class ApexChart extends Component {
   constructor(props) {
     super(props);
@@ -11,7 +9,7 @@ class ApexChart extends Component {
     this.state = {
       series: [
         {
-          data: data.slice(),
+          data: [],
         },
       ],
       options,
@@ -39,18 +37,24 @@ class ApexChart extends Component {
   }
 
   getNewSeries = async (baseval, yrange) => {
-    for (let i = 0; i < this.state.series[0].data.length - 61; i++) {
-      // we remove all items older than the last 60 - because there are 60 intervals of 10 seconds in 10 minutes
-      this.state.series[0].data.shift();
-    }
+    this.clearBacklog();
     const res = await this.props.getData();
     console.log(res);
-    const newData = this.state.series[0].data.slice();
-    newData.push({
-      x: res.time,
-      y: res.loadAverage,
-    });
+    const newData = [
+      ...this.state.series[0].data,
+      {
+        x: res.x,
+        y: res.y,
+      },
+    ];
     this.updateChartData(newData);
+  };
+
+  clearBacklog = () => {
+    // we remove all items older than the last 60 - because there are 60 intervals of 10 seconds in 10 minutes
+    for (let i = 0; i < this.state.series[0].data.length - 59; i++) {
+      this.state.series[0].data.shift();
+    }
   };
 
   updateChartData = (newData) => {
