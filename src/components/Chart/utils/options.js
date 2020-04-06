@@ -1,4 +1,6 @@
 import { XAXISRANGE } from "./constants";
+import moment from "moment";
+
 const options = {
   chart: {
     id: "realtime",
@@ -32,8 +34,13 @@ const options = {
     size: 0,
   },
   xaxis: {
-    type: "datetime",
+    type: "categories",
     range: XAXISRANGE,
+    labels: {
+      formatter: function (value, timestamp, index) {
+        return moment(new Date(timestamp)).format("LTS");
+      },
+    },
   },
   yaxis: {
     max: 1,
