@@ -1,16 +1,29 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import "./App.scss";
+import Chart from "./components/Chart/Chart";
 
-function App() {
-  const { title } = "DataDog task";
-  return (
-    <div className="app">
-      <header className="app__header">
-        <Link to="/">{title}</Link>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.title = "DataDog task";
+  }
+
+  getData = () => {
+    return fetch("http://localhost:5000/")
+      .then((res) => res.text())
+      .then((data) => JSON.parse(data))
+      .catch((err) => console.error("backend request failed: ", err));
+  };
+
+  render() {
+    return (
+      <div className="app">
+        <header className="app__header">{this.title}</header>
+        <section>
+          <Chart getData={this.getData} />
+        </section>
+      </div>
+    );
+  }
 }
-
 export default App;
