@@ -4,7 +4,13 @@ import Chart from "./components/Chart/Chart";
 import ApexCharts from "apexcharts";
 import options from "./utils/options";
 import { TICKINTERVAL } from "./utils/constants";
-import { getInitialData, clearBacklog } from "./utils/helpers";
+import {
+  getInitialData,
+  clearBacklog,
+  checkLoad,
+  updateAnnotations,
+} from "./utils/helpers";
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -18,6 +24,7 @@ class App extends React.Component {
         },
       ],
       options,
+      highLoad: false,
     };
   }
   componentDidMount() {
@@ -42,14 +49,12 @@ class App extends React.Component {
   getNewSeries = async () => {
     let dataPoints = clearBacklog(this.state.series[0].data);
     const res = await this.getData();
-    // check if the new element is not the latest one
-    const lastElement = dataPoints[dataPoints.length - 1];
-    if (lastElement && lastElement.x > res.x) {
-      console.log(`Not the latest element, sorting: ${res}`);
-      dataPoints.sort((a, b) => a.x - b.x);
-    }
+    //const newLoadState = checkLoad(this.state.highLoad, res, dataPoints);
+    //updateAnnotations(newLoadState, this.state.highLoad, res.x, dataPoints);
+    dataPoints = this.sortData(dataPoints, res);
     console.log(res);
     this.updateChartData(dataPoints, res);
+    //this.updateLoadStateData(newLoadState);
   };
 
   getData = () => {
@@ -66,11 +71,28 @@ class App extends React.Component {
       .catch((err) => console.error("backend request failed: ", err));
   };
 
+  sortData = (dataPoints, newPoint) => {
+    // check if the new element is not the latest one
+    const lastElement = dataPoints[dataPoints.length - 1];
+    if (lastElement && lastElement.x > newPoint.x) {
+      console.log(`Not the latest element, sorting: ${newPoint}`);
+      dataPoints.sort((a, b) => a.x - b.x);
+    }
+    return dataPoints;
+  };
+
   updateChartData = (data, res) => {
     const newData = [...data, { ...res }];
     this.setState({
       ...this.state,
       series: [{ data: newData }],
+    });
+  };
+
+  updateLoadStateData = (newState) => {
+    this.setState({
+      ...this.state,
+      highLoad: newState,
     });
   };
 

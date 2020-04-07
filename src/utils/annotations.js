@@ -1,5 +1,5 @@
 const annotationOptions = {
-  fillColor: "#B3F7CA",
+  fillColor: "#FF4560",
   opacity: 0.4,
   label: {
     borderColor: "#FF4560",
