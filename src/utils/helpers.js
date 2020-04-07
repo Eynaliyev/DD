@@ -20,18 +20,17 @@ export const getInitialData = () => {
   return initialData;
 };
 /**
- * removes older data points to avoice memory leaks
+ * removes older data points to avoid memory leaks
  * @param {Array <{x: timestamp, y: value}>} data - The title of the book.
  * @returns {Array <{x: timestamp, y: value}>} - data - updated array with only latest items
  */
 export const clearBacklog = (data) => {
-  const res = [...data];
   const numOfElemetns = Math.floor(XAXISRANGE / TICKINTERVAL);
   // we remove all items older than the last 60 - because there are 60 intervals of 10 seconds in 10 minutes
-  for (let i = 0; i < res.length - numOfElemetns; i++) {
-    res.shift();
+  for (let i = 0; i < data.length - numOfElemetns; i++) {
+    data.shift();
   }
-  return res;
+  return data;
 };
 /**
  * gets annotation and updates it in chart options in order
@@ -41,7 +40,6 @@ export const clearBacklog = (data) => {
  */
 export const createAnnotation = (start, end) => {
   const newAnnotation = getAnnotations(start, end);
-  console.log(newAnnotation);
   chartOptions.annotations.xaxis.push(newAnnotation);
 };
 /**
@@ -127,15 +125,15 @@ export const checkLoad = (isUnderHighLoad, newDataPoint, data) => {
 };
 
 export const latestElementsHighLoad = (latestElements) => {
-  const lowLoadElementExists = latestElements.find((el) => el < 1);
+  const lowLoadElementExists = latestElements.find((el) => el.y < 1);
   return !lowLoadElementExists;
 };
 
 export const latestElementsLowLoad = (latestElements) => {
-  const highLoadElementExists = latestElements.find((el) => el < 1);
+  const highLoadElementExists = latestElements.find((el) => el.y > 1);
   return !highLoadElementExists;
 };
 
 export const getLastElements = (arr, numOfElements) => {
-  arr.slice(Math.max(arr.length - numOfElements, 0));
+  return arr.slice(Math.max(arr.length - numOfElements, 0));
 };
