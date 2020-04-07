@@ -1,10 +1,9 @@
 import { XAXISRANGE } from "./constants";
 import moment from "moment";
-
-const options = {
+const chartOptions = {
   chart: {
     id: "realtime",
-    height: 350,
+    height: 450,
     type: "line",
     animations: {
       enabled: true,
@@ -49,5 +48,15 @@ const options = {
   legend: {
     show: false,
   },
+  dropShadow: {
+    enabled: true,
+    top: 0,
+    left: 0,
+    blur: 3,
+    opacity: 0.5,
+  },
+  annotations: {
+    xaxis: [],
+  },
 };
-export default options;
+export default chartOptions;
