@@ -4,7 +4,7 @@ const router = require("express").Router();
 router.route("/").get((req, res) => {
   try {
     const cpus = os.cpus().length;
-    const loadAverage = os.loadavg()[0] / cpus;
+    const loadAverage = os.loadavg()[0] / cpus + 0.5 + Math.random();
     const time = new Date().getTime();
     const result = {
       loadAverage,

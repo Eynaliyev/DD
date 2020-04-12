@@ -1,3 +1,4 @@
+// test cases for check load with 3 parameters arguments and last result
 export const singleDataPoint = { x: 1596365988513, y: 0 };
 
 export const lowLoadData = [

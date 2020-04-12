@@ -7,7 +7,7 @@ import { TICKINTERVAL } from "./utils/constants";
 import {
   getInitialData,
   clearBacklog,
-  checkLoad,
+  isStillHighLoad,
   updateAnnotations,
 } from "./utils/helpers";
 
@@ -49,7 +49,11 @@ class App extends React.Component {
   getNewSeries = async () => {
     let dataPoints = clearBacklog(this.state.series[0].data);
     const res = await this.getData();
-    //const newLoadState = checkLoad(this.state.highLoad, res, dataPoints);
+    const newLoadState = isStillHighLoad(
+      this.state.highLoad,
+      res.y,
+      dataPoints
+    );
     //updateAnnotations(newLoadState, this.state.highLoad, res.x, dataPoints);
     dataPoints = this.sortData(dataPoints, res);
     console.log(res);

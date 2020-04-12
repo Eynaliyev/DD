@@ -1,7 +1,5 @@
 import * as helpers from "./helpers";
 import * as mockData from "./mock-data";
-import annotationOptions from "./annotations";
-import chartOptions from "./options";
 import { TICKINTERVAL, XAXISRANGE, LOAD_CHECK_INTERVAL } from "./constants";
 
 describe("getInitialData", () => {
@@ -25,6 +23,48 @@ describe("clearBacklog", () => {
   });
 });
 
+describe("isStillHighLoad", () => {
+  const checkLoadData = [
+    [true, 1.1, mockData.highLoadData, true], // consistent high load
+    [true, 1.1, mockData.lowLoadData, true], // should be impossible
+    [true, 0.5, mockData.highLoadData, true], // new low point in otherwise high load position
+    [true, 0.5, mockData.lowLoadData, false], // recovered
+    [false, 0.5, mockData.lowLoadData, false], //  new low point in low load
+    [false, 1.1, mockData.highLoadData, true], // high load activated
+    [false, 0.5, mockData.highLoadData, false], //  should be impossible
+    [false, 1.1, mockData.lowLoadData, false], // blimp of high use under otherwise low usage
+  ];
+
+  it("should correctly identify the new load  state", () => {
+    for (let i = 0; i < checkLoadData.length; i++) {
+      const res = helpers.isStillHighLoad(
+        checkLoadData[i][0],
+        checkLoadData[i][1],
+        checkLoadData[i][2]
+      );
+      expect(res).toEqual(checkLoadData[i][3]);
+    }
+  });
+});
+
+describe("isHighLoad", () => {
+  it("should return whether all elements of the array have value above 1", () => {
+    const resOne = helpers.isHighLoad(mockData.highLoadData);
+    expect(resOne).toBeTruthy();
+    const resTwo = helpers.isHighLoad(mockData.lowLoadData);
+    expect(resTwo).toBeFalsy();
+  });
+});
+
+describe("isLowLoad", () => {
+  it("should return whether all elements of the array have value below 1", () => {
+    const resOne = helpers.isLowLoad(mockData.highLoadData);
+    expect(resOne).toBeFalsy();
+    const resTwo = helpers.isLowLoad(mockData.lowLoadData);
+    expect(resTwo).toBeTruthy();
+  });
+});
+
 describe("getLastElements", () => {
   const initData = helpers.getInitialData();
   initData.push(mockData.singleDataPoint);
@@ -35,46 +75,5 @@ describe("getLastElements", () => {
   });
   it("should remove the first item of the array", () => {
     expect(res[0].x !== initData[0].x).toBeTruthy();
-  });
-});
-
-describe("createAnnotation", () => {
-  beforeEach(() => {
-    chartOptions.annotations.xaxis.length = [];
-  });
-
-  afterEach(() => {
-    chartOptions.annotations.xaxis.length = [];
-  });
-
-  it("should append generated annotation to the end of the annotations array", () => {
-    const res = helpers.createAnnotation(1, 2);
-    expect(chartOptions.annotations.xaxis.length).toEqual(1);
-  });
-});
-
-describe("getAnnotations", () => {
-  it("should return an object with given x1 and x2 values", () => {
-    const res = helpers.getAnnotations(1, 2);
-    expect(res.x1).toEqual(1);
-    expect(res.x2).toEqual(2);
-  });
-});
-
-describe("latestElementsHighLoad", () => {
-  it("should return whether all elements of the array have value above 1", () => {
-    const resOne = helpers.latestElementsHighLoad(mockData.highLoadData);
-    expect(resOne).toBeTruthy();
-    const resTwo = helpers.latestElementsHighLoad(mockData.lowLoadData);
-    expect(resTwo).toBeFalsy();
-  });
-});
-
-describe("latestElementsLowLoad", () => {
-  it("should return whether all elements of the array have value below 1", () => {
-    const resOne = helpers.latestElementsLowLoad(mockData.highLoadData);
-    expect(resOne).toBeFalsy();
-    const resTwo = helpers.latestElementsLowLoad(mockData.lowLoadData);
-    expect(resTwo).toBeTruthy();
   });
 });
