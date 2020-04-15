@@ -40,3 +40,18 @@ export const clearBacklog = (data) => {
 export const getLastElements = (arr, numOfElements) => {
   return arr.slice(Math.max(arr.length - numOfElements, 0));
 };
+/**
+ * useful in case results arrive in incorrect chronological order
+ * @param {Array <{x: timestamp, y: value}>} dataPoints - array of elements
+ * @param {x: timestamp, y: value} newPoint - new element to be added to the resulting array
+ * @returns - a new array with given elements
+ */
+export const sortData = (dataPoints, newPoint) => {
+  // check if the new element is not the latest one
+  const lastElement = dataPoints[dataPoints.length - 1];
+  if (lastElement && lastElement.x > newPoint.x) {
+    console.log(`Not the latest element, sorting: ${newPoint}`);
+    dataPoints.sort((a, b) => a.x - b.x);
+  }
+  return dataPoints;
+};

@@ -3,10 +3,17 @@ import "./App.scss";
 import Chart from "./components/Chart/Chart";
 import ApexCharts from "apexcharts";
 import options from "./utils/options";
-import { TICKINTERVAL } from "./utils/constants";
-import { getInitialData, clearBacklog, isStillHighLoad } from "./utils/helpers";
-import { alertHandler } from "./utils/alert.utils";
-import { updateAnnotations } from "./utils/annotations";
+import {
+  TICKINTERVAL,
+  getInitialData,
+  clearBacklog,
+  isStillHighLoad,
+  alertHandler,
+  updateAnnotations,
+  getData,
+  sortData,
+} from "./utils";
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -44,45 +51,22 @@ class App extends React.Component {
 
   getNewSeries = async () => {
     let dataPoints = clearBacklog(this.state.series[0].data);
-    const res = await this.getData();
+    const res = await getData();
     const formattedYValue = Math.min(res.y, 1);
     const newLoadState = isStillHighLoad(
       this.state.highLoad,
       res.y,
       dataPoints
     );
+    //this.updateState(newLoadState, this.state.highLoad, res.x, dataPoints);
     updateAnnotations(newLoadState, this.state.highLoad, res.x, dataPoints);
     alertHandler(newLoadState, this.state.highLoad);
-    dataPoints = this.sortData(dataPoints, res);
+    dataPoints = sortData(dataPoints, res);
     this.updateChartData(dataPoints, {
       ...res,
       y: formattedYValue,
     });
     this.updateLoadStateData(newLoadState);
-  };
-
-  getData = () => {
-    return fetch("http://localhost:5000/")
-      .then((res) => res.text())
-      .then((data) => JSON.parse(data))
-      .then((parsedData) => {
-        // data format expected by ApexCharts library
-        return {
-          x: parsedData.time,
-          y: parsedData.loadAverage,
-        };
-      })
-      .catch((err) => console.error("backend request failed: ", err));
-  };
-
-  sortData = (dataPoints, newPoint) => {
-    // check if the new element is not the latest one
-    const lastElement = dataPoints[dataPoints.length - 1];
-    if (lastElement && lastElement.x > newPoint.x) {
-      console.log(`Not the latest element, sorting: ${newPoint}`);
-      dataPoints.sort((a, b) => a.x - b.x);
-    }
-    return dataPoints;
   };
 
   updateChartData = (data, res) => {

@@ -1,12 +1,13 @@
 import React from "react";
 import ApexChart from "react-apexcharts";
+import { CHART_HEIGHT } from "../../utils/constants";
 const Chart = (props) => (
   <div id="chart">
     <ApexChart
       options={props.options}
       series={props.series}
       type="line"
-      height={350}
+      height={CHART_HEIGHT}
     />
   </div>
 );
