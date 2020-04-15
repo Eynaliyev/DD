@@ -4,13 +4,9 @@ import Chart from "./components/Chart/Chart";
 import ApexCharts from "apexcharts";
 import options from "./utils/options";
 import { TICKINTERVAL } from "./utils/constants";
-import {
-  getInitialData,
-  clearBacklog,
-  isStillHighLoad,
-  updateAnnotations,
-} from "./utils/helpers";
-
+import { getInitialData, clearBacklog, isStillHighLoad } from "./utils/helpers";
+import { alertHandler } from "./utils/alert.utils";
+import { updateAnnotations } from "./utils/annotations";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -49,16 +45,20 @@ class App extends React.Component {
   getNewSeries = async () => {
     let dataPoints = clearBacklog(this.state.series[0].data);
     const res = await this.getData();
+    const formattedYValue = Math.min(res.y, 1);
     const newLoadState = isStillHighLoad(
       this.state.highLoad,
       res.y,
       dataPoints
     );
-    //updateAnnotations(newLoadState, this.state.highLoad, res.x, dataPoints);
+    updateAnnotations(newLoadState, this.state.highLoad, res.x, dataPoints);
+    alertHandler(newLoadState, this.state.highLoad);
     dataPoints = this.sortData(dataPoints, res);
-    console.log(res);
-    this.updateChartData(dataPoints, res);
-    //this.updateLoadStateData(newLoadState);
+    this.updateChartData(dataPoints, {
+      ...res,
+      y: formattedYValue,
+    });
+    this.updateLoadStateData(newLoadState);
   };
 
   getData = () => {

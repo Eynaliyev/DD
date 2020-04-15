@@ -1,3 +1,3 @@
-export const TICKINTERVAL = 10000;
-export const XAXISRANGE = 600000;
-export const LOAD_CHECK_INTERVAL = 120000;
+export const TICKINTERVAL = 1000;
+export const XAXISRANGE = 60000;
+export const LOAD_CHECK_INTERVAL = 12000;
