@@ -50,7 +50,6 @@ export const sortData = (dataPoints, newPoint) => {
   // check if the new element is not the latest one
   const lastElement = dataPoints[dataPoints.length - 1];
   if (lastElement && lastElement.x > newPoint.x) {
-    console.log(`Not the latest element, sorting: ${newPoint}`);
     dataPoints.sort((a, b) => a.x - b.x);
   }
   return dataPoints;
