@@ -8,7 +8,7 @@ import {
   getInitialData,
   clearBacklog,
   isStillHighLoad,
-  alertHandler,
+  handleAlert,
   updateAnnotations,
   getData,
   sortData,
@@ -52,35 +52,31 @@ class App extends React.Component {
   getNewSeries = async () => {
     let dataPoints = clearBacklog(this.state.series[0].data);
     const res = await getData();
-    const formattedYValue = Math.min(res.y, 1);
     const newLoadState = isStillHighLoad(
       this.state.highLoad,
       res.y,
       dataPoints
     );
-    //this.updateState(newLoadState, this.state.highLoad, res.x, dataPoints);
+    this.updateState(res, dataPoints, newLoadState);
     updateAnnotations(newLoadState, this.state.highLoad, res.x, dataPoints);
-    alertHandler(newLoadState, this.state.highLoad);
-    dataPoints = sortData(dataPoints, res);
-    this.updateChartData(dataPoints, {
-      ...res,
-      y: formattedYValue,
-    });
-    this.updateLoadStateData(newLoadState);
+    handleAlert(newLoadState, this.state.highLoad);
   };
 
-  updateChartData = (data, res) => {
-    const newData = [...data, { ...res }];
+  updateState = (newPoint, dataPoints, newLoadState) => {
+    const sortedData = sortData(dataPoints, newPoint);
+    const formattedYValue = Math.min(newPoint.y, 1);
+
+    const newData = [
+      ...sortedData,
+      {
+        ...newPoint,
+        y: formattedYValue,
+      },
+    ];
     this.setState({
       ...this.state,
       series: [{ data: newData }],
-    });
-  };
-
-  updateLoadStateData = (newState) => {
-    this.setState({
-      ...this.state,
-      highLoad: newState,
+      highLoad: newLoadState,
     });
   };
 

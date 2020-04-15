@@ -5,7 +5,7 @@
  *
  */
 
-export const alertHandler = (newHighLoadState, oldHighLoadState) => {
+export const handleAlert = (newHighLoadState, oldHighLoadState) => {
   if (oldHighLoadState !== newHighLoadState) {
     createAlert(newHighLoadState);
   }
