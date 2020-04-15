@@ -1,4 +1,4 @@
-export * from "./alert.utils";
+export * from "./alert";
 export * from "./annotations";
 export * from "./constants";
 export * from "./helpers";

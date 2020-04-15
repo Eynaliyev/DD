@@ -1,68 +1,56 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+CPU load performance monitoring applicatin
 
-## Available Scripts
+## testing alarm / highlight functionality
 
-In the project directory, you can run:
+In order to quickly test the functionality of the application under high / low load you can alter just 2 files:
 
-### `yarn start`
+1. - backend/routes/cpuLoad.js - you can add 1 to the result on line 7 / set it to a value of 1 and higher
+2. src/utils/constants.js - remove a zero from first 3 variables - making the application query backend at 1 second intervals, displaying more recent load time and checking the load over last 12 seconds.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Overall codestructure
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+The application consts of 2 components - :
 
-### `yarn test`
+### src/App.js
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+smart component responsible for all of the state / logic of the application
 
-### `yarn build`
+### src/components/Chart
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+simple wrapper component around Apex chart libraryfor passing the necessary configuration.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### backend/server.js
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Express js configureation for the server
 
-### `yarn eject`
+### routes/cpuLoad
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+api for querying the cpu load of the computer.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### src/utils/api.js
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+holds the functionality for communicatiing with the server
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### src/utils/annotations.js
 
-## Learn More
+File keeping logicfor managing annotations - the configuration for adding the red highlights of high CPU usage time
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### src/utils/alert.js
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Simple alertingfunctionality that calls a normal alert when the loadstateofthe applicationchanges.
 
-### Code Splitting
+### src/utils/options.js
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+Apex charts configuration options
 
-### Analyzing the Bundle Size
+### src/utils/constants.js
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+constants for setting the application update speed, length of duration that needs to be viewed
 
-### Making a Progressive Web App
+### src/utils/helpers.js
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+utility functions for array manipulations, creating initial dummy data and etc.
 
-### Advanced Configuration
+### src/utils/load.js
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+load state functionality - checking whether system is under high or low load.

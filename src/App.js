@@ -5,6 +5,7 @@ import ApexCharts from "apexcharts";
 import options from "./utils/options";
 import {
   TICKINTERVAL,
+  APP_TITLE
   getInitialData,
   clearBacklog,
   isStillHighLoad,
@@ -17,7 +18,6 @@ import {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.title = "DataDog task";
     const data = getInitialData();
 
     this.state = {
@@ -83,7 +83,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="app">
-        <header className="app__header">{this.title}</header>
+        <header className="app__header">{APP_TITLE}</header>
         <section>
           <Chart options={this.state.options} series={this.state.series} />
         </section>
